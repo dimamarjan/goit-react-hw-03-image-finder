@@ -53,11 +53,11 @@
     "prettier": "^2.3.2"
   },
   "lint-staged": {
-    "*.{js, jsx}": [
+    "*.{js, jsx, css, scss}": [
       "node_modules/.bin/eslint --max-warnings=0",
       "prettier --write",
       "git add"
     ],
-    "*.js": "eslint --cache --fix"
+    "*.{js, css, scss}": "eslint --cache --fix"
   }
 }
