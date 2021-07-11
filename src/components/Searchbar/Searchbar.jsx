@@ -5,7 +5,8 @@ export class Searchbar extends Component {
     render() {
         return (
             <Header>
-                <HeaderForm>
+                {console.log(this.props)}
+                <HeaderForm onSubmit={this.props.onSubmitHeandler}>
                     <Button></Button>
                     <InputSection placeholder="Search images and photos"></InputSection>
                 </HeaderForm>

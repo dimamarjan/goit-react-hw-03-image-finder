@@ -5,9 +5,9 @@ import { GalleryListItem, GalleryListItemimage } from './ImageGalleryItem.style'
 export class ImageGalleryItem extends Component {
     render() {
         return (
-            <GalleryListItem>
-                <GalleryListItemimage />
-            </GalleryListItem>
+                <GalleryListItem>
+                        <GalleryListItemimage />
+                </GalleryListItem>
         )
     }
 }
