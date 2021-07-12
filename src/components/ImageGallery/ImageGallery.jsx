@@ -4,7 +4,9 @@ import {GalleryList} from "./ImageGallery.style"
 export class ImageGallery extends Component {
     render() {
         return (
-            <GalleryList></GalleryList>
+            <GalleryList>
+                {this.props.children}
+            </GalleryList>
         )
     }
 }
