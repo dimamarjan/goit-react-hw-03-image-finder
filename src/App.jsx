@@ -23,6 +23,22 @@ class App extends Component {
 	}
 
 
+	loadMoreImage = async nextPageData => {
+		console.log(this.prevState);
+		const prevData = [...this.state.data];
+		const newPageNum = this.state.page + 1;
+		
+
+		 const newRespData = await getData(this.state.findInputData, newPageNum)
+			 .then(resp => resp.hits);
+		 console.log(this.prevState);
+		 this.setState({
+			 "data": [...prevData, ...newRespData],
+			 "page": newPageNum
+		 })
+	}
+
+
 	async componentDidUpdate(_, prevState) {
 		if (prevState.findInputData !== this.state.findInputData) {
 			this.setState({
@@ -47,6 +63,9 @@ class App extends Component {
 	}
 
 
+
+
+
 	render() {
 		const imageData = this.state.data.length !== 0;
 		const buttonLoad = this.state.data.length === 12;
@@ -59,7 +78,7 @@ class App extends Component {
 						<ImageGalleryItem data={this.state.data} />
 					</ImageGallery>
 				}
-				{buttonLoad && <Loader />}
+				{buttonLoad && <Loader onLoadData={this.loadMoreImage} />}
 			</div>
 		)
 	}	
