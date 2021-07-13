@@ -4,6 +4,7 @@ import { Searchbar } from 'components/Searchbar/Searchbar'
 import { ImageGallery } from 'components/ImageGallery/ImageGallery'
 import { ImageGalleryItem } from 'components/ImageGalleryItem/ImageGalleryItem'
 import { Loader } from 'components/Loader/Loader'
+import { ToastNotify } from 'utils/ToastNotify'
 
 import { getData } from 'utils/getData'
 
@@ -14,7 +15,6 @@ class App extends Component {
 		findInputData: null,
 		page: null,
 		nextPage: null,
-		imageLoadedStatus: false
 	}
 
 
@@ -33,7 +33,6 @@ class App extends Component {
 		 })
 		const newRespData = await getData(this.state.findInputData, newPageNum)
 			.then(resp => resp.hits);
-		console.log(newRespData);
 		this.setState({
 			"data": [...prevData, ...newRespData],
 			"page": newPageNum,
@@ -59,7 +58,6 @@ class App extends Component {
 					"nextPage": false,
 					"page": null
 				});
-				console.log("no matches...")
 			} else {
 				this.setState({
 					"data": respData,
@@ -77,17 +75,17 @@ class App extends Component {
 
 
 	render() {
-		const imageData = this.state.status === "resolved";
+		const dataLoaded = this.state.status === "resolved";
+		const noDataFound = this.state.status === "rejected";
 		const buttonLoad = this.state.nextPage && this.state.status === "resolved";
 
 		return (
 			<div className="App">
 				<Searchbar onSubmit={this.inputFindingData} />
-				{imageData &&
-					<ImageGallery >
-						<ImageGalleryItem data={this.state.data} />
-					</ImageGallery>
-				}
+				{dataLoaded && <ImageGallery >
+					<ImageGalleryItem data={this.state.data} />
+				</ImageGallery>}
+				{noDataFound && <ToastNotify />}
 				{buttonLoad && <Loader onLoadData={this.loadMoreImage} />}
 			</div>
 		)
