@@ -11,8 +11,10 @@ class App extends Component {
 	state = {
 		data: [],
 		status: "idle",
+		findInputData: null,
 		page: null,
-		findInputData: null
+		nextPage: null,
+		imageLoadedStatus: false
 	}
 
 
@@ -23,19 +25,24 @@ class App extends Component {
 	}
 
 
-	loadMoreImage = async nextPageData => {
-		console.log(this.prevState);
+	loadMoreImage = async () => {
 		const prevData = [...this.state.data];
 		const newPageNum = this.state.page + 1;
-		
-
-		 const newRespData = await getData(this.state.findInputData, newPageNum)
-			 .then(resp => resp.hits);
-		 console.log(this.prevState);
-		 this.setState({
-			 "data": [...prevData, ...newRespData],
-			 "page": newPageNum
+		this.setState({
+			 "status": "pending"
 		 })
+		const newRespData = await getData(this.state.findInputData, newPageNum)
+			.then(resp => resp.hits);
+		console.log(newRespData);
+		this.setState({
+			"data": [...prevData, ...newRespData],
+			"page": newPageNum,
+			"status": "resolved"
+		})
+		window.scrollTo({
+			top: document.documentElement.scrollHeight,
+			behavior: 'smooth',
+		});
 	}
 
 
@@ -46,10 +53,11 @@ class App extends Component {
 			});
 			const respData = await getData(this.state.findInputData)
 				.then(resp => resp.hits)
-			console.log(respData)
 			if (respData.length === 0) {
 				this.setState({
-					"status": "rejected"
+					"status": "rejected",
+					"nextPage": false,
+					"page": null
 				});
 				console.log("no matches...")
 			} else {
@@ -58,23 +66,25 @@ class App extends Component {
 					"status": "resolved",
 					"page": 1
 				});
+				if (respData.length === 12) {
+					this.setState({
+					"nextPage": true
+				});
+				}
 			}
 		}
 	}
 
 
-
-
-
 	render() {
-		const imageData = this.state.data.length !== 0;
-		const buttonLoad = this.state.data.length === 12;
+		const imageData = this.state.status === "resolved";
+		const buttonLoad = this.state.nextPage && this.state.status === "resolved";
 
 		return (
 			<div className="App">
 				<Searchbar onSubmit={this.inputFindingData} />
 				{imageData &&
-					<ImageGallery>
+					<ImageGallery >
 						<ImageGalleryItem data={this.state.data} />
 					</ImageGallery>
 				}
