@@ -5,6 +5,7 @@ import { ImageGallery } from 'components/ImageGallery/ImageGallery'
 import { ImageGalleryItem } from 'components/ImageGalleryItem/ImageGalleryItem'
 import { Loader } from 'components/Loader/Loader'
 import { ToastNotify } from 'utils/ToastNotify'
+import { Spinner } from 'components/SkeletonComponent/Spinner'
 
 import { getData } from 'utils/getData'
 
@@ -75,6 +76,7 @@ class App extends Component {
 
 
 	render() {
+		const awaitLoadingData = this.state.status === "pending";
 		const dataLoaded = this.state.status === "resolved";
 		const noDataFound = this.state.status === "rejected";
 		const buttonLoad = this.state.nextPage && this.state.status === "resolved";
@@ -82,6 +84,7 @@ class App extends Component {
 		return (
 			<div className="App">
 				<Searchbar onSubmit={this.inputFindingData} />
+				{awaitLoadingData && <Spinner />}
 				{dataLoaded && <ImageGallery >
 					<ImageGalleryItem data={this.state.data} />
 				</ImageGallery>}
