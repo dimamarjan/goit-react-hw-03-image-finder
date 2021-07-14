@@ -6,6 +6,7 @@ import { ImageGalleryItem } from 'components/ImageGalleryItem/ImageGalleryItem'
 import { Loader } from 'components/Loader/Loader'
 import { ToastNotify } from 'utils/ToastNotify'
 import { Spinner } from 'components/SkeletonComponent/Spinner'
+import { ModalWindow } from 'components/ModalWindow/ModalWindow'
 
 import { getData } from 'utils/getData'
 
@@ -16,6 +17,8 @@ class App extends Component {
 		findInputData: null,
 		page: null,
 		nextPage: null,
+		showModal: false,
+		currentImg: null
 	}
 
 
@@ -43,6 +46,20 @@ class App extends Component {
 			top: document.documentElement.scrollHeight,
 			behavior: 'smooth',
 		});
+	}
+
+
+	togleModal = () => {
+		this.setState(({ showModal }) => ({
+			"showModal": !showModal,
+		}));
+	};
+
+
+	currentImgHendle = (imageId) => {
+		this.setState({
+			"currentImg": imageId
+		})
 	}
 
 
@@ -80,16 +97,22 @@ class App extends Component {
 		const dataLoaded = this.state.status === "resolved";
 		const noDataFound = this.state.status === "rejected";
 		const buttonLoad = this.state.nextPage && this.state.status === "resolved";
+		const { showModal } = this.state;
 
 		return (
 			<div className="App">
 				<Searchbar onSubmit={this.inputFindingData} />
 				{awaitLoadingData && <Spinner />}
 				{dataLoaded && <ImageGallery >
-					<ImageGalleryItem data={this.state.data} />
+					<ImageGalleryItem
+						data={this.state.data}
+						togleModalHendle={this.togleModal}
+						currentImgHendle={this.currentImgHendle}
+					/>
 				</ImageGallery>}
 				{noDataFound && <ToastNotify />}
 				{buttonLoad && <Loader onLoadData={this.loadMoreImage} />}
+				{showModal && <ModalWindow currentImage={this.state.currentImg} closeModal={this.togleModal}/>}
 			</div>
 		)
 	}	
