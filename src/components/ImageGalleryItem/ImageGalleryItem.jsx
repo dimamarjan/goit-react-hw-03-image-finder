@@ -8,7 +8,6 @@ export class ImageGalleryItem extends Component {
     };
 
     getImageId = (e) => {
-        console.log(this.props);
         const currentImg = parseInt(e.target.id);
         const dataArr = this.props.data;
         dataArr.forEach(image => {

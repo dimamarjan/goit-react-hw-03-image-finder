@@ -62,6 +62,12 @@ class App extends Component {
 		})
 	}
 
+	keyPressHeandler = (e) => {
+		if (e.key === "Escape") {
+			this.togleModal();
+		}
+	} 
+
 
 	async componentDidUpdate(_, prevState) {
 		if (prevState.findInputData !== this.state.findInputData) {
@@ -89,6 +95,12 @@ class App extends Component {
 				}
 			}
 		}
+		if (this.state.showModal) {
+			window.addEventListener("keydown", this.keyPressHeandler)
+		}
+		if (this.state.showModal === false) {
+			window.removeEventListener("keydown", this.keyPressHeandler)
+		}
 	}
 
 
@@ -98,6 +110,8 @@ class App extends Component {
 		const noDataFound = this.state.status === "rejected";
 		const buttonLoad = this.state.nextPage && this.state.status === "resolved";
 		const { showModal } = this.state;
+
+		
 
 		return (
 			<div className="App">
